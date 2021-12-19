@@ -1,0 +1,126 @@
+const UserModel = require('../models/userschema');
+
+let newUser = ({
+  firstname:'firstname',
+  lastname:'lastname',
+  age:24,
+  email:"test@test.com"
+})
+
+var objectUSER = [
+  {
+    firstname:'firstname2',
+    lastname:'lastname2',
+    age:37,
+    email:"test2@test.com"
+  },
+  {
+    firstname:'firstname3',
+    lastname:'lastname3',
+    age:18,
+    email:"test3@test.com"
+  },
+  {
+    firstname:'firstname4',
+    lastname:'lastname4',
+    age:45,
+    email:"test4@test.com"
+  },
+  {
+    firstname:'firstname5',
+    lastname:'lastname5',
+    age:35,
+    email:"test5@test.com"
+  },
+  {
+    firstname:'firstname6',
+    lastname:'lastname6',
+    age:65,
+    email:"test6@test.com"
+  },
+  {
+    firstname:'firstname7',
+    lastname:'lastname7',
+    age:27,
+    email:"test7@test.com"
+  },
+];
+//ADD A NEW USER TO THE DATABASE 
+  const postNewUser = async (req, res)=> {
+    
+        UserModel.create( newUser , function ( err , result ) {
+          if ( err ) {
+            console. log ( err ) 
+          } else {
+            console. log ( result ) 
+          }
+          })
+          
+          res.send(newUser)
+      }
+//InsertMany USER TO THE DATABASE 
+const postManyNewUser = async (req, res)=> {
+  UserModel.create( objectUSER , function ( err , result ) {
+      if ( err ) {
+        console. log ( err ) 
+      } else {
+        console. log ( result ) 
+      }
+      })
+      res.send(objectUSER)
+}
+// RETURN ALL USERS 
+const getFindUser = async (req, res) => {
+    try {
+      const users = await UserModel.find()
+      if (!users) throw Error('No users exist');
+      res.json(users);
+    } 
+    catch (err) {
+      res.status(400).json({ msg: err.message });
+    } 
+}
+
+//  EDIT A USER BY ID 
+const putUpdateUser= async (req, res) => {
+    try {
+      const users = await UserModel.findOneAndUpdate(
+        {
+          _id :'61bf477e52f3bdca1a2f5f27'
+        },
+        {
+          email: 'theoutlander@live.com'
+        },
+        {   
+        new: true,           // return updated doc
+        runValidators: true                    
+        }
+        )
+        if (!users) throw Error('No users exist');
+      
+      res.send(users);
+    } 
+    catch (err) {
+      res.status((500)).json({ msg: err.message });
+    } 
+  }
+
+//REMOVE A USER BY ID 
+const DeleteById= async (req, res) => {
+  
+    try {
+      const users = await UserModel.findByIdAndRemove(
+        {
+          _id :'61bf47a452f3bdca1a2f5f2e'
+        })
+        if (!users) throw Error('No users exist');
+        res.send(users);
+    } 
+    catch (err) {
+      res.status((500)).json({ msg: err.message });
+    } 
+  }
+
+module.exports ={DeleteById,postManyNewUser,putUpdateUser,getFindUser,postNewUser};
+
+  
